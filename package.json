@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon server.js",
-    "start:prod": "NODE_ENV=production nodemon server.js"
+    "start:prod": "NODE_ENV=production nodemon server.js",
+    "import-test-tours": "node dev-data/data/import-dev-data.js --import",
+    "delete-all-tours": "node dev-data/data/import-dev-data.js --delete"
   },
   "author": "",
   "license": "ISC",
