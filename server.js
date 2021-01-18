@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 // добавляем в process.env данные из config.env
 // делаем до того, как выполнится код app.js
 dotenv.config({ path: './config.env' });
@@ -8,6 +9,19 @@ const app = require('./app');
 
 // значение окружения из express
 // console.log(app.get('env'))
+
+const DB = process.env.DB_URL.replace('<password>', process.env.DB_PASSWORD);
+
+mongoose
+  // .connect(process.env.DB_LOCAL_URL, {
+  .connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    console.log('DB connection successful!');
+  });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
