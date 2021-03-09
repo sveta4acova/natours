@@ -41,6 +41,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false, // при получении объекта юзера не отдавать это поле
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -56,8 +61,16 @@ userSchema.pre('save', async function (next) {
   // не нужно обновлять объект юзера, если новый пароль такой же как и старый
   if (!this.isModified('password') || this.isNew) return next();
 
-  // тут автор отнимал 1 секунду, но вроде и так работает
-  this.passwordChangedAt = Date.now();
+  // тут автор отнимал 1 секунду (1000 миллисекунд), но вроде и так работает
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // отдаем только активных юзеров
+  // т.к. с самого начала у юзеров active не завели, то почти у всех сейчас оно равно undefined
+  // поэтому вместо active: true, используем active: { $ne: false }
+  this.find({ active: { $ne: false } });
   next();
 });
 
@@ -74,7 +87,10 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       this.passwordChangedAt.getTime() / 1000,
       10
     );
-    return JWTTimestamp > changedTimestamp;
+    // JWTTimestamp - дата, когда токен был выпущен
+    // она должна быть больше, чем дата установки пароля, после сброса
+    // если она меньше, это значит, что токен выпустили до установки пароля
+    return JWTTimestamp < changedTimestamp;
   }
 
   return false;

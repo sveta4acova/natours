@@ -6,6 +6,7 @@ dotenv.config({ path: './config.env' });
 // console.log(process.env.NODE_ENV)
 
 process.on('uncaughtException', err => {
+  console.log(err)
   console.log('💥💥💥uncaughtException💥💥💥');
   process.exit(1);
 });
