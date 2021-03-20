@@ -1,5 +1,6 @@
 const express = require('express');
-const router = express.Router();
+// мы с tourRouter сделали сюда переадресацию, поэтому нам нужен доступ к параметрам того запроса
+const router = express.Router({ mergeParams: true });
 const reviewsController = require('../controllers/reviewsController');
 const authController = require('../controllers/authController');
 
@@ -12,6 +13,9 @@ router
     reviewsController.createReview
   );
 
-router.route('/:id').get(authController.protect, reviewsController.getReview);
+router
+  .route('/:id')
+  .get(authController.protect, reviewsController.getReview)
+  .delete(authController.protect, reviewsController.deleteReview);
 
 module.exports = router;
