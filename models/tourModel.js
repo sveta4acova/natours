@@ -101,7 +101,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
-    guides: Array,
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
@@ -112,6 +112,14 @@ const tourSchema = new mongoose.Schema(
 // req.query не повлияет на виртуальные свойства
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
+});
+
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  // отзыв ссылается на тур через поле tour
+  foreignField: 'tour',
+  // ид, полученный из поля tour объекта отзыва, должен совпадать с полем _id тура
+  localField: '_id',
 });
 
 // document middleware, before event - .save() or .create() in db
@@ -137,6 +145,15 @@ tourSchema.pre(/^find/, function (next) {
   // this - группа документов
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
+  next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+
   next();
 });
 
