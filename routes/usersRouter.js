@@ -8,28 +8,30 @@ router.post('/login', authController.login);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password/:token', authController.resetPassword);
 
-router.patch(
-  '/update-my-password',
-  authController.protect,
-  authController.updatePassword
-);
+// все ниже перечисленные роуты будут требовать авторизации
+// чтоб не дублировать во всех этих запросах authController.protect, применяем эту функцию как мидлвару
+router.use(authController.protect);
 
-router.patch('/update-me', authController.protect, usersController.updateMe);
+router.patch('/update-my-password', authController.updatePassword);
 
-router.delete('/delete-me', authController.protect, usersController.deleteMe);
+router.patch('/update-me', usersController.updateMe);
 
-router.get(
-  '/me',
-  authController.protect,
-  usersController.getMe,
-  usersController.getUser
-);
+router.delete('/delete-me', usersController.deleteMe);
+
+router.get('/me', usersController.getMe, usersController.getUser);
+
+
+router.use(authController.restrictTo('admin'));
 
 router
   .route('/')
   .get(usersController.getAllUsers)
   .post(usersController.createUser);
 
-router.route('/:id').get(usersController.getUser);
+router
+  .route('/:id')
+  .get(usersController.getUser)
+  .patch(usersController.updateUser)
+  .delete(usersController.deleteUser);
 
 module.exports = router;
