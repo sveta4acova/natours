@@ -18,6 +18,13 @@ router.patch('/update-me', authController.protect, usersController.updateMe);
 
 router.delete('/delete-me', authController.protect, usersController.deleteMe);
 
+router.get(
+  '/me',
+  authController.protect,
+  usersController.getMe,
+  usersController.getUser
+);
+
 router
   .route('/')
   .get(usersController.getAllUsers)
