@@ -1,8 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const toursRouter = require('./routes/toursRouter');
 const usersRouter = require('./routes/usersRouter');
 const reviewsRouter = require('./routes/reviewsRouter');
+const viewRouter = require('./routes/viewRouter');
 const globalErrorHandler = require('./controllers/errorController');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -12,9 +14,20 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // MIDDLEWARES
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Set security HTTP headers
-app.use(helmet());
+app.use(
+  helmet({
+    // если true, то скрипты с внешних сайтов не грузятся
+    contentSecurityPolicy: false,
+  })
+);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
@@ -59,9 +72,6 @@ app.use(
   })
 );
 
-// Serving static files
-app.use(express.static(`${__dirname}/public`));
-
 // Test middleware
 app.use((req, res, next) => {
   req.requestedAt = new Date().toISOString();
@@ -69,6 +79,8 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
+app.use('/', viewRouter);
+
 app.use('/api/v1/tours', toursRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/reviews', reviewsRouter);
