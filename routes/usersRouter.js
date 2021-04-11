@@ -15,12 +15,16 @@ router.use(authController.protect);
 
 router.patch('/update-my-password', authController.updatePassword);
 
-router.patch('/update-me', usersController.updateMe);
+router.patch(
+  '/update-me',
+  usersController.uploadUserPhoto,
+  usersController.resizeUserPhoto,
+  usersController.updateMe
+);
 
 router.delete('/delete-me', usersController.deleteMe);
 
 router.get('/me', usersController.getMe, usersController.getUser);
-
 
 router.use(authController.restrictTo('admin'));
 
