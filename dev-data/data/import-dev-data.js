@@ -14,9 +14,7 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then(() => {
-    console.log('DB connection successful!');
-  });
+  .then(() => {});
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
@@ -27,9 +25,7 @@ const importData = async () => {
     await User.create(users, { validateBeforeSave: false });
     await Tour.create(tours);
     await Review.create(reviews);
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
   process.exit();
 };
 
@@ -38,9 +34,7 @@ const deleteData = async () => {
     await Tour.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
   process.exit();
 };
 

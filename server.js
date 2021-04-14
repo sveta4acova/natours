@@ -6,8 +6,6 @@ dotenv.config({ path: './config.env' });
 // console.log(process.env.NODE_ENV)
 
 process.on('uncaughtException', err => {
-  console.log(err)
-  console.log('💥💥💥uncaughtException💥💥💥');
   process.exit(1);
 });
 
@@ -26,19 +24,18 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log('DB connection successful!');
+    // console.log('DB connection successful!');
   });
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
-  console.log(`App running on port ${port} ...`);
+  // console.log(`App running on port ${port} ...`);
 });
 
 process.on('unhandledRejection', err => {
   // мы не можем завершить процесс сразу, вызвав process.exit();
   // нужно подождать пока сервер завершит активные процессы (pending)
   // поэтому передаем колбэк в sever.close и внутри process.exit();
-  console.log('💥💥💥unhandledRejection💥💥💥');
   server.close(() => {
     process.exit(1);
   });

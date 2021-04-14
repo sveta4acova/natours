@@ -141,7 +141,6 @@ tourSchema.pre('save', async function (next) {
 
 // after .save() or .create()
 tourSchema.post('save', function (doc, next) {
-  // console.log('doc in post save', doc);
   next();
 });
 
@@ -163,13 +162,11 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 tourSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds`);
   next();
 });
 
 // aggregation middleware
 tourSchema.pre('aggregate', function (next) {
-  // console.log(this.pipeline());
   this.pipeline().push({ $match: { secretTour: { $ne: true } } });
   next();
 });

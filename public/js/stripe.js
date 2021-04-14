@@ -8,7 +8,6 @@ export const bookTour = async (tourId) => {
     const session = await axios(
       `http://localhost:8000/api/v1/booking/checkout-session/${tourId}`
     );
-    console.log(session);
 
     // 2. Create checkout form + charge credit card
     // тестовые данные карточки - 4242 4242 4242 4242 , cvc - любые три цифры, дата будущая любая
