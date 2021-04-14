@@ -4,6 +4,7 @@ const path = require('path');
 const toursRouter = require('./routes/toursRouter');
 const usersRouter = require('./routes/usersRouter');
 const reviewsRouter = require('./routes/reviewsRouter');
+const bookingRouter = require('./routes/bookingRouter');
 const viewRouter = require('./routes/viewRouter');
 const globalErrorHandler = require('./controllers/errorController');
 const rateLimit = require('express-rate-limit');
@@ -87,6 +88,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', toursRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/reviews', reviewsRouter);
+app.use('/api/v1/booking', bookingRouter);
 
 app.all('*', async (req, res, next) => {
   // res.status(404).json({
