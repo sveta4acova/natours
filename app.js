@@ -5,8 +5,10 @@ const toursRouter = require('./routes/toursRouter');
 const usersRouter = require('./routes/usersRouter');
 const reviewsRouter = require('./routes/reviewsRouter');
 const bookingRouter = require('./routes/bookingRouter');
+const bookingController = require('./controllers/bookingController');
 const viewRouter = require('./routes/viewRouter');
 const globalErrorHandler = require('./controllers/errorController');
+const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -43,6 +45,13 @@ app.use(
     // если true, то скрипты с внешних сайтов не грузятся
     contentSecurityPolicy: false,
   })
+);
+
+// тут боди парсить не надо, поэтому перед express.json
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
 );
 
 // Body parser, reading data from body into req.body

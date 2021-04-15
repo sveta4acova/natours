@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get(
   '/',
-  bookingController.createBooking,
+  // bookingController.createBooking,
   authController.isLoggedIn,
   viewsController.getOverview
 );
