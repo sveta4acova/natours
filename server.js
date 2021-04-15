@@ -40,3 +40,10 @@ process.on('unhandledRejection', err => {
     process.exit(1);
   });
 });
+
+// специфика Heroku
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('SIGTERM received. Process terminated');
+  });
+});

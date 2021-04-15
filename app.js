@@ -17,6 +17,10 @@ const cookieParser = require('cookie-parser');
 const AppError = require('./utils/appError');
 const app = express();
 
+// запросы не придут напрямую на наш сервер, т.к. Heroku их проксирует сначала куда-то
+// поэтому делаем эту настройку
+app.enable('trust proxy');
+
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
