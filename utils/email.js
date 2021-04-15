@@ -14,7 +14,15 @@ module.exports = class Email {
   createTransport() {
     if (process.env.NODE_ENV === 'production') {
       // нихрена не получилось зарегаться на sendGrid
-      return 1;
+      // поэтому тут то же самое, что и в дев режиме
+      return nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
     }
 
     return nodemailer.createTransport({
