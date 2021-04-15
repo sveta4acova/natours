@@ -2,6 +2,7 @@ import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
 import { updateSettings } from './updateSettings';
+import { showAlert } from './alerts';
 import { bookTour } from './stripe';
 
 // Dom elements
@@ -60,4 +61,10 @@ if (bookBtn) {
 
     bookTour(tourId);
   })
+}
+
+const alertMessage = document.querySelector('body').dataset.alert;
+
+if (alertMessage) {
+  showAlert('success', alertMessage, 8);
 }

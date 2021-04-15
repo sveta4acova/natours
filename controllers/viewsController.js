@@ -4,6 +4,18 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const AppError = require('../utils/appError');
 
+exports.alerts = (req, res, next) => {
+  const { alert } = req.query;
+
+  if (alert === 'booking') {
+    // хук страйпа не всегда выполняется раньше, чем будет переброс на страницу успешной оплаты (/my-tours)
+    res.locals.alert =
+      "Your booking was successful! If your booking doesn't show up here immediately, please come back later";
+  }
+
+  next();
+};
+
 exports.getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
 
